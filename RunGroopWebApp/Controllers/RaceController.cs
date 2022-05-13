@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RunGroopWebApp.Data;
+using RunGroopWebApp.Dtos;
 using RunGroopWebApp.Interfaces;
 using RunGroopWebApp.Models;
 
@@ -9,9 +11,14 @@ namespace RunGroopWebApp.Controllers
     public class RaceController : Controller
     {
         private readonly IRaceRepository _rcRepository;
-        public RaceController(IRaceRepository rcRepository)
+        private readonly IPhotoService _phtService;
+        private readonly IMapper _mapper;
+
+        public RaceController(IRaceRepository rcRepository, IPhotoService phtService, IMapper mapper)
         {
             _rcRepository = rcRepository;
+            _phtService = phtService;
+            _mapper = mapper;
         }
         public async Task<IActionResult> Index()
         {
@@ -30,14 +37,69 @@ namespace RunGroopWebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Race race)
+        public async Task<IActionResult> Create(CreateRaceDto raceDto)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _phtService.AddPhotoAsync(raceDto.ImageFile);
+                var race = _mapper.Map<Race>(raceDto);
+                race.Image = result.Url.ToString();
+                _rcRepository.Add(race);
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                ModelState.AddModelError("","Photo upload failed");
+            }
+            return View(raceDto);
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var race = await _rcRepository.GetByIdAsync(id);
+            if (race == null) return View("Error");
+            var raceDto = _mapper.Map<EditRaceDto>(race);
+            return View(raceDto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, EditRaceDto raceDto)
         {
             if (!ModelState.IsValid)
             {
-                return View(race);
+                ModelState.AddModelError("", "Failed to edit club");
+                return View("Edit", raceDto);
             }
-            _rcRepository.Add(race);
-            return RedirectToAction("Index");
+
+            var userRace = await _rcRepository.GetByIdAsyncNoTracking(id);
+
+            if (userRace != null)
+            {
+                var race = _mapper.Map<Race>(raceDto);
+                if (raceDto.ImageFile != null)
+                {
+                    try
+                    {
+                        await _phtService.DeletePhotoAsync(userRace.Image);
+                    }
+                    catch (Exception e)
+                    {
+                        ModelState.AddModelError("", "Could not delete photo");
+                        return View(raceDto);
+                    }
+
+                    var photoResult = await _phtService.AddPhotoAsync(raceDto.ImageFile);
+                    race.Image = photoResult.Url.ToString();
+                }
+
+                _rcRepository.Update(race);
+
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View(raceDto);
+            }
         }
     }
 }

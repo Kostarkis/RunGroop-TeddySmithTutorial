@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using RunGroopWebApp.Models;
 
 namespace RunGroopWebApp.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<User>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :base(options)
         {
@@ -12,6 +13,6 @@ namespace RunGroopWebApp.Data
 
         public DbSet<Race> Races { get; set; }
         public DbSet<Club> Clubs { get; set; }
-        public DbSet<Address> Addresss { get; set; }
+        public DbSet<Address> Addresses { get; set; }
     }
 }
