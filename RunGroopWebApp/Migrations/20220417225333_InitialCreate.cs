@@ -21,7 +21,7 @@ namespace RunGroopWebApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Addresss", x => x.Id);
+                    table.PrimaryKey("PK_Addresses", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -51,9 +51,9 @@ namespace RunGroopWebApp.Migrations
                 {
                     table.PrimaryKey("PK_User", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_User_Addresss_AddressId",
+                        name: "FK_User_Addresses_AddressId",
                         column: x => x.AddressId,
-                        principalTable: "Addresss",
+                        principalTable: "Addresses",
                         principalColumn: "Id");
                 });
 
@@ -74,9 +74,9 @@ namespace RunGroopWebApp.Migrations
                 {
                     table.PrimaryKey("PK_Clubs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Clubs_Addresss_AddressId",
+                        name: "FK_Clubs_Addresses_AddressId",
                         column: x => x.AddressId,
-                        principalTable: "Addresss",
+                        principalTable: "Addresses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -103,9 +103,9 @@ namespace RunGroopWebApp.Migrations
                 {
                     table.PrimaryKey("PK_Races", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Races_Addresss_AddressId",
+                        name: "FK_Races_Addresses_AddressId",
                         column: x => x.AddressId,
-                        principalTable: "Addresss",
+                        principalTable: "Addresses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -153,7 +153,7 @@ namespace RunGroopWebApp.Migrations
                 name: "User");
 
             migrationBuilder.DropTable(
-                name: "Addresss");
+                name: "Addresses");
         }
     }
 }
