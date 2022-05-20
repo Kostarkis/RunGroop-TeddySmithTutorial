@@ -1,5 +1,4 @@
 ﻿using RunGroopWebApp.Data.Enum;
-using RunGroopWebApp.Models;
 
 namespace RunGroopWebApp.Dtos
 {

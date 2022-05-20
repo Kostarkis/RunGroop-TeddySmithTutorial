@@ -13,12 +13,14 @@ namespace RunGroopWebApp.Controllers
         private readonly IRaceRepository _rcRepository;
         private readonly IPhotoService _phtService;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public RaceController(IRaceRepository rcRepository, IPhotoService phtService, IMapper mapper)
+        public RaceController(IRaceRepository rcRepository, IPhotoService phtService, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _rcRepository = rcRepository;
             _phtService = phtService;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<IActionResult> Index()
         {
@@ -33,7 +35,12 @@ namespace RunGroopWebApp.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            var curUserID = _httpContextAccessor.HttpContext?.User.GetUserId();
+            var createRaceDto = new CreateRaceDto
+            {
+                UserId = curUserID
+            };
+            return View(createRaceDto);
         }
 
         [HttpPost]

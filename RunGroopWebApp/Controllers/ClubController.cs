@@ -13,13 +13,17 @@ namespace RunGroopWebApp.Controllers
         private readonly IClubRepository _clbRepository;
         private readonly IPhotoService _phtService;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ClubController(IClubRepository clbRepository, IPhotoService phtService, IMapper mapper)
+        public ClubController(IClubRepository clbRepository, IPhotoService phtService, IMapper mapper,
+            IHttpContextAccessor httpContextAccessor)
         {
             _clbRepository = clbRepository;
             _phtService = phtService;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
         }
+
         public async Task<IActionResult> Index()
         {
             IEnumerable<Club> clubs = await _clbRepository.GetAll();
@@ -34,7 +38,12 @@ namespace RunGroopWebApp.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            var curUserId = _httpContextAccessor.HttpContext.User.GetUserId();
+            var createClubDto = new CreateClubDto
+            {
+                UserId = curUserId
+            };
+            return View(createClubDto);
         }
 
         [HttpPost]

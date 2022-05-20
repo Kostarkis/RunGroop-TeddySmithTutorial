@@ -14,5 +14,6 @@ namespace RunGroopWebApp.Dtos
         public string City { get; set; }
         public string State { get; set; }
         public RaceCategory RaceCategory { get; set; }
+        public string UserId { get; set; }
     }
 }

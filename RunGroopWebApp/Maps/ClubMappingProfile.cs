@@ -24,7 +24,8 @@ namespace RunGroopWebApp
                 .ForMember(m => m.City, c => c.MapFrom(c => c.Address.City))
                 .ForMember(m => m.State, c => c.MapFrom(c => c.Address.State))
                 .ForMember(m => m.Url, c => c.MapFrom(c => c.Image))
-                .ReverseMap();
+                .ReverseMap()
+                /*.ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null))*/;
         }
     }
 }

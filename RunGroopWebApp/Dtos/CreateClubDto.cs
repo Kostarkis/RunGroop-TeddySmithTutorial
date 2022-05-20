@@ -13,5 +13,6 @@ namespace RunGroopWebApp.Dtos
         public string State { get; set; }
         public IFormFile ImageFile { get; set; }
         public ClubCategory ClubCategory { get; set; }
+        public string UserId { get; set; }
     }
 }
