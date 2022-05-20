@@ -1,0 +1,1 @@
+﻿When naming the Dto the naming convention schould be: ControllerMethod"Dto"
