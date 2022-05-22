@@ -16,6 +16,9 @@ namespace RunGroopWebApp.Maps
 
             CreateMap<User, DetailsUserDto>()
                 .ReverseMap();
+
+            CreateMap<User, EditUserDashboardDto>()
+                .ReverseMap();
         }
     }
 }
